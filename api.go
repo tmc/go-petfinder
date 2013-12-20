@@ -9,23 +9,23 @@ import (
 	"github.com/golang/glog"
 )
 
-type api struct {
+type API struct {
 	BaseURL     string
-	Key, Secret string
+	key, secret string
 }
 
-// NewAPI creates a new api object from an API key and secret key
-// TODO: secret is ignored for now
-func NewAPI(key, secret string) (*api, error) {
+// NewAPI creates a new API object from an API key and secret key
+// 	Note: secret is ignored for now
+func NewAPI(key, secret string) (*API, error) {
 	if key == "" {
 		return nil, ErrMissingAPIKey
 	}
-	return &api{"http://api.petfinder.com/",
+	return &API{"http://api.petfinder.com/",
 		key, secret}, nil
 }
 
 // Breeds fetches the available breeds for an animal
-func (a *api) Breeds(animalName string) ([]Breed, error) {
+func (a *API) Breeds(animalName string) ([]Breed, error) {
 	r, err := a.getResponse("breed.list", map[string]string{
 		"animal": animalName,
 	})
@@ -38,7 +38,7 @@ func (a *api) Breeds(animalName string) ([]Breed, error) {
 }
 
 // RandomPet fetches a list of random Pets
-func (a *api) RandomPets() ([]Pet, error) {
+func (a *API) RandomPets() ([]Pet, error) {
 	r, err := a.getResponse("pet.getRandom", map[string]string{
 		"output": "full",
 	})
@@ -50,13 +50,13 @@ func (a *api) RandomPets() ([]Pet, error) {
 
 }
 
-func (a *api) getResponse(endpoint string, args map[string]string) (*apiResponse, error) {
+func (a *API) getResponse(endpoint string, args map[string]string) (*apiResponse, error) {
 	values, _ := url.ParseQuery("")
 	for key, value := range args {
 		values.Add(key, value)
 	}
 	// add universal params
-	values.Add("key", a.Key)
+	values.Add("key", a.key)
 	values.Add("format", "json")
 
 	u, err := url.Parse(a.BaseURL + endpoint + "?" + values.Encode())
