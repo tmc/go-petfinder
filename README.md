@@ -2,6 +2,8 @@
 
 http://godoc.org/github.com/tmc/go-petfinder
 
+Status: Partially implemented (patches welcome!)
+
 License: ISC
 
 Example:
